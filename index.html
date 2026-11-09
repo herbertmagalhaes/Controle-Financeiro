@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#123b66"><title>Meu Financeiro</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="authView" class="auth-wrap">
+    <section class="auth-card">
+      <div class="brand-mark">R$</div><p class="eyebrow">ORGANIZAÇÃO FINANCEIRA</p><h1>Meu Financeiro</h1>
+      <p class="muted">Acompanhe suas entradas, despesas e objetivos em um só lugar.</p>
+      <div id="configNotice" class="notice hidden">Configure a URL e a chave pública do seu projeto Supabase no arquivo <b>app.js</b> para ativar o acesso.</div>
+      <form id="authForm"><label>E-mail<input id="email" type="email" required autocomplete="email" placeholder="seu@email.com"></label><label>Senha<input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="Mínimo de 6 caracteres"></label><button class="primary full" id="loginBtn">Entrar</button><button type="button" class="text-button" id="signupBtn">Criar minha conta</button></form>
+      <p id="authMsg" class="message"></p>
+    </section>
+  </div>
+  <div id="appView" class="app hidden">
+    <aside class="sidebar"><div class="side-brand"><span class="brand-mark small">R$</span><div><b>Meu Financeiro</b><small>Controle pessoal</small></div></div>
+      <nav><button class="nav-link active" data-page="dashboard">▦ <span>Visão geral</span></button><button class="nav-link" data-page="transactions">↕ <span>Lançamentos</span></button><button class="nav-link" data-page="goals">◎ <span>Minhas reservas</span></button></nav>
+      <div class="side-bottom"><span id="userEmail" class="muted"></span><button id="logoutBtn" class="logout">↪ Sair</button></div>
+    </aside>
+    <main class="main"><header class="topbar"><div><p class="eyebrow">SEU DINHEIRO, SOB CONTROLE</p><h1 id="pageTitle">Visão geral</h1></div><div class="month-select"><label for="monthFilter">Mês</label><input type="month" id="monthFilter"></div></header>
+      <section id="dashboardPage" class="page">
+        <div class="summary-grid"><article class="summary dark"><span>Saldo do mês</span><strong id="balanceTotal">R$ 0,00</strong><small>Entradas menos despesas</small></article><article class="summary"><span>Entradas</span><strong id="incomeTotal">R$ 0,00</strong><small>Salário + Uber + outras</small></article><article class="summary"><span>Despesas</span><strong id="expenseTotal">R$ 0,00</strong><small>Total lançado no mês</small></article><article class="summary"><span>Guardado nas reservas</span><strong id="savedTotal">R$ 0,00</strong><small>Casamento + emergência</small></article></div>
+        <div class="two-col"><section class="panel"><div class="panel-head"><div><p class="eyebrow">MOVIMENTAÇÃO</p><h2>Adicionar lançamento</h2></div></div>
+          <form id="entryForm" class="entry-form"><div class="type-switch"><label><input type="radio" name="type" value="expense" checked> Despesa</label><label><input type="radio" name="type" value="income"> Entrada</label><label><input type="radio" name="type" value="saving"> Reserva</label></div>
+            <label>Descrição<input id="description" required maxlength="100" placeholder="Ex.: mercado, salário, combustível"></label><div class="form-row"><label>Valor (R$)<input id="amount" type="number" min="0.01" step="0.01" required placeholder="0,00"></label><label>Data<input id="entryDate" type="date" required></label></div>
+            <label>Categoria<select id="category"><option>Alimentação</option><option>Moradia</option><option>Transporte</option><option>Combustível</option><option>Saúde</option><option>Contas</option><option>Lazer</option><option>Compras</option><option>Salário</option><option>Uber</option><option>Outras entradas</option><option>Casamento</option><option>Reserva de emergência</option><option>Outros</option></select></label>
+            <button class="primary" type="submit">Salvar lançamento</button><p id="entryMsg" class="message"></p>
+          </form></section>
+          <section class="panel"><div class="panel-head"><div><p class="eyebrow">PLANEJAMENTO</p><h2>Seu ponto de partida</h2></div></div><div class="income-plan"><div><span>Salário fixo mensal</span><b>R$ 2.500,00</b></div><div><span>Uber — média semanal</span><b>R$ 175,00</b></div><p class="muted small-note">A renda do Uber é uma estimativa ajustável: lance o valor real recebido para manter os cálculos corretos.</p></div><div class="tip"><b>Dica</b><p>Registre cada gasto, mesmo os pequenos. Assim você identifica para onde o dinheiro está indo.</p></div></section></div>
+        <section class="panel"><div class="panel-head"><div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Últimos lançamentos</h2></div><button class="outline" data-go="transactions">Ver todos</button></div><div id="recentList" class="table-wrap"></div></section>
+      </section>
+      <section id="transactionsPage" class="page hidden"><section class="panel"><div class="panel-head"><div><p class="eyebrow">HISTÓRICO</p><h2>Todos os lançamentos</h2></div><select id="typeFilter"><option value="all">Todos</option><option value="income">Entradas</option><option value="expense">Despesas</option><option value="saving">Reservas</option></select></div><div id="allList" class="table-wrap"></div></section></section>
+      <section id="goalsPage" class="page hidden"><div class="goal-grid"><article class="panel goal-card"><div class="goal-icon">♡</div><p class="eyebrow">OBJETIVO 01</p><h2>Casamento</h2><p class="muted">Separe aos poucos o dinheiro para realizar esse objetivo.</p><strong id="weddingSaved" class="goal-value">R$ 0,00</strong><label>Meta (R$)<input type="number" id="weddingTarget" min="0" step="0.01" placeholder="Defina sua meta"></label><div class="progress"><span id="weddingProgress"></span></div><small id="weddingPercent">0% da meta</small></article>
+      <article class="panel goal-card"><div class="goal-icon blue">⌂</div><p class="eyebrow">OBJETIVO 02</p><h2>Reserva de emergência</h2><p class="muted">Construa uma proteção para imprevistos.</p><strong id="emergencySaved" class="goal-value">R$ 0,00</strong><label>Meta (R$)<input type="number" id="emergencyTarget" min="0" step="0.01" placeholder="Defina sua meta"></label><div class="progress"><span id="emergencyProgress"></span></div><small id="emergencyPercent">0% da meta</small></article></div><p class="muted footnote">Para adicionar dinheiro a uma reserva, crie um lançamento do tipo “Reserva” e escolha a categoria correspondente.</p></section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body></html>
