@@ -1,6 +1,6 @@
 // 1) Crie um projeto Supabase e cole aqui a URL e a chave PUBLICÁVEL (sb_publishable_... ou anon).
 // Nunca coloque a chave service_role neste arquivo.
-const SUPABASE_URL = 'https://hldsbduwfpigabxvwytp.supabase.co/rest/v1/';
+const SUPABASE_URL = 'https://hldsbduwfpigabxvwytp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_SCwiU-dbL1Y8yKRsyVrK_g_tOnxUF32';
 const configured = SUPABASE_URL.startsWith('https://') && !SUPABASE_KEY.includes('COLE_AQUI');
 const sb = configured && window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
